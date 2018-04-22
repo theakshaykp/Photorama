@@ -1,0 +1,38 @@
+.posts-wrapper
+  .row.profile-header
+    .col-md-6
+      .img-circle
+        = profile_avatar_select(@user)
+    .col-md-6
+      .user-name-and-follow
+        %h4.profile-user-name
+          %strong 
+            = @user.user_name
+        %span
+          - if @user == current_user
+            = link_to 'Edit Profile',edit_profile_path(@user.user_name),class: 'btn edit-button'
+            %h4.profile-user-name
+              .count
+                %h4 Followers
+                = @user.followers.count
+                %h4 Following
+                = @user.following.count
+          - else
+            - if current_user_is_following(current_user.id, @user.id)
+              = link_to 'Following', unfollow_user_path,remote: true,class: 'btn unfollow-button',id: 'unfollow-button',method: :post
+            - else
+              = link_to 'Follow', follow_user_path,remote: true,class: 'btn follow-button',id: 'follow-button',method: :post
+            %h4.profile-user-name
+              .count
+                %h4 Followers
+                = @user.followers.count
+                %h4 Following
+                = @user.following.count
+      %p.profile-bio
+        %h4 
+          = @user.bio
+      .user-statistics
+        %p
+          = pluralize @user.posts.count, 'post'
+-@posts.each do |post|
+  = render 'posts/post', post: post
